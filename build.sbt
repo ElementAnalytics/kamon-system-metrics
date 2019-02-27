@@ -22,6 +22,8 @@ val slf4jJul          = "org.slf4j"                 %   "jul-to-slf4j"          
 
 name := "kamon-system-metrics"
 
+scalaVersion := "2.11.12"
+
 libraryDependencies ++=
   compileScope(kamonCore, sigarLoader) ++
   testScope(scalatest, kamonTestkit, logback, slf4jJul)
