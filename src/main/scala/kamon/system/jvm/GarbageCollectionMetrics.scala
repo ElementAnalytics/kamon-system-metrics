@@ -25,6 +25,7 @@ import com.sun.management.GarbageCollectionNotificationInfo.GARBAGE_COLLECTION_N
 import kamon.Kamon
 import kamon.metric._
 import kamon.system.{JmxMetricBuilder, Metric, MetricBuilder}
+import kamon.system.serviceTag
 import org.slf4j.Logger
 
 import collection.JavaConverters._
@@ -71,7 +72,7 @@ final case class GCNotificationListener(gcMetrics: GarbageCollectorMetrics) exte
         val space = before.keys.find(spaceName => spaceTags(spaceTag).exists(tag => spaceName.toLowerCase.contains(tag)))
         space.foreach { sp =>
           val promoted = after(sp).getUsed - before(sp).getUsed
-          if(promoted > 0) gcMetrics.gcPromotionMetric.refine("space", spaceTag).record(promoted)
+          if(promoted > 0) gcMetrics.gcPromotionMetric.refine(serviceTag, "space" -> spaceTag).record(promoted)
         }
       }
     }
@@ -86,7 +87,7 @@ final case class GarbageCollectorMetrics(metricName: String) {
   val gcPromotionMetric = Kamon.histogram(s"$metricName.promotion", MeasurementUnit.none) //TODO different name
 
   def forCollector(collector: String): GarbageCollectorMetrics = {
-    val collectorTags = Map("component" -> "system-metrics",  "collector" -> collector)
+    val collectorTags = Map(serviceTag, "component" -> "system-metrics",  "collector" -> collector)
     GarbageCollectorMetrics(collectorTags, gcTimeMetric.refine(collectorTags), gcTimeMetric.refine(collectorTags))
   }
 

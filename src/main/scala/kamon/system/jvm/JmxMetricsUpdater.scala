@@ -18,15 +18,16 @@ package kamon.system.jvm
 
 import kamon.system.{Metric, withNamedThread}
 
-class JmxMetricsUpdater extends Runnable{
+class JmxMetricsUpdater extends Runnable {
   val metrics: Seq[Metric] = Seq(
     MemoryUsageMetrics.register(),
     ClassLoadingMetrics.register(),
     ThreadsMetrics.register(),
-    GarbageCollectionMetrics.register()
+    GarbageCollectionMetrics.register(),
+    FileDescriptorMetrics.register()
   ).flatten
 
-  override def run(): Unit =  withNamedThread("jmx-metric-updater"){
+  override def run(): Unit = withNamedThread("jmx-metric-updater") {
     metrics.foreach(_.update())
   }
 }

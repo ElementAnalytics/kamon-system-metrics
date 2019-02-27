@@ -22,6 +22,9 @@ import org.hyperic.sigar.Sigar
 import org.slf4j.Logger
 
 package object system {
+
+  lazy val serviceTag = "service" -> Kamon.environment.service
+
   private lazy val sigar = new Sigar()
   private lazy val pid = ManagementFactory.getRuntimeMXBean.getName.split("@")(0).toLong
 
