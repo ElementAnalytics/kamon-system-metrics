@@ -25,6 +25,7 @@ import org.slf4j.Logger
 
 import scala.collection.JavaConverters._
 import scala.util.matching.Regex
+import kamon.system.serviceTag
 
 /**
  *  Memory Pool metrics, as reported by JMX:
@@ -88,9 +89,9 @@ final case class MemoryMetrics(metricPrefix:String) {
     val memoryTags = Map("segment" -> segment)
     MemoryMetrics(
       memoryTags,
-      memoryUsageMetric.refine("component" -> "system-metrics", "measure" -> "used", "segment" -> segment),
-      memoryUsageMetric.refine("component" -> "system-metrics", "measure" -> "committed", "segment" -> segment),
-      memoryUsageMetric.refine("component" -> "system-metrics", "measure" -> "max", "segment" -> segment)
+      memoryUsageMetric.refine(serviceTag, "component" -> "system-metrics", "measure" -> "used", "segment" -> segment),
+      memoryUsageMetric.refine(serviceTag, "component" -> "system-metrics", "measure" -> "committed", "segment" -> segment),
+      memoryUsageMetric.refine(serviceTag, "component" -> "system-metrics", "measure" -> "max", "segment" -> segment)
     )
   }
 
@@ -105,9 +106,9 @@ final case class BufferPoolMetrics(metricPrefix:String) {
     val poolTags = Map("pool" -> pool)
     BufferPoolMetrics(
       poolTags,
-      bufferPoolCountMetric.refine("component" -> "system-metrics", "pool" -> pool),
-      bufferPoolUsageMetric.refine("component" -> "system-metrics", "pool" -> pool, "measure" -> "used"),
-      bufferPoolUsageMetric.refine("component" -> "system-metrics", "pool" -> pool, "measure" -> "capacity")
+      bufferPoolCountMetric.refine(serviceTag, "component" -> "system-metrics", "pool" -> pool),
+      bufferPoolUsageMetric.refine(serviceTag, "component" -> "system-metrics", "pool" -> pool, "measure" -> "used"),
+      bufferPoolUsageMetric.refine(serviceTag, "component" -> "system-metrics", "pool" -> pool, "measure" -> "capacity")
     )
   }
 

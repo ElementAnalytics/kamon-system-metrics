@@ -21,6 +21,7 @@ import java.lang.management.ManagementFactory
 import kamon.Kamon
 import kamon.system.{JmxMetricBuilder, Metric, MetricBuilder}
 import org.slf4j.Logger
+import kamon.system.serviceTag
 
 /**
  *  Threads metrics, as reported by JMX:
@@ -31,9 +32,9 @@ object ThreadsMetrics extends MetricBuilder("jvm.threads") with JmxMetricBuilder
     val threadsBean = ManagementFactory.getThreadMXBean
 
     val jvmThreadsMetric = Kamon.gauge(metricName)
-    val daemonThreadCountMetric = jvmThreadsMetric.refine("component" -> "system-metrics", "measure" -> "daemon")
-    val peekThreadCountMetric   = jvmThreadsMetric.refine("component" -> "system-metrics", "measure" -> "peak")
-    val threadCountMetric       = jvmThreadsMetric.refine("component" -> "system-metrics", "measure" -> "total")
+    val daemonThreadCountMetric = jvmThreadsMetric.refine(serviceTag, "component" -> "system-metrics", "measure" -> "daemon")
+    val peekThreadCountMetric   = jvmThreadsMetric.refine(serviceTag, "component" -> "system-metrics", "measure" -> "peak")
+    val threadCountMetric       = jvmThreadsMetric.refine(serviceTag, "component" -> "system-metrics", "measure" -> "total")
 
     def update(): Unit = {
       daemonThreadCountMetric.set(threadsBean.getDaemonThreadCount.toLong)

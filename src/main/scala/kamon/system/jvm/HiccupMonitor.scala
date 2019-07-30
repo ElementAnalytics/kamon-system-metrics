@@ -22,6 +22,7 @@ import kamon.Kamon
 import kamon.metric.{Histogram, MeasurementUnit}
 import kamon.system.{CustomMetricBuilder, Metric, MetricBuilder, SystemMetrics}
 import org.slf4j.Logger
+import kamon.system.serviceTag
 
 object HiccupMonitor extends MetricBuilder("jvm.hiccup") with CustomMetricBuilder {
   override def build(pid: Long, metricName: String, logger: Logger) = new Metric {
@@ -30,7 +31,7 @@ object HiccupMonitor extends MetricBuilder("jvm.hiccup") with CustomMetricBuilde
 
     if(SystemMetrics.hiccupMonitorEnabled) {
       val sampleResolution = SystemMetrics.hiccupSampleIntervalResolution.toNanos
-      val hiccupTimeMetric = Kamon.histogram(metricName, MeasurementUnit.time.nanoseconds).refine("component" -> "system-metrics")
+      val hiccupTimeMetric = Kamon.histogram(metricName, MeasurementUnit.time.nanoseconds).refine(serviceTag, "component" -> "system-metrics")
 
       val threadMonitor = new Monitor(hiccupTimeMetric, sampleResolution)
       threadMonitor.setDaemon(true)

@@ -20,6 +20,7 @@ import java.lang.management.ManagementFactory
 
 import kamon.Kamon
 import kamon.system.{JmxMetricBuilder, Metric, MetricBuilder}
+import kamon.system.serviceTag
 import org.slf4j.Logger
 
 /**
@@ -32,9 +33,9 @@ object ClassLoadingMetrics extends MetricBuilder("jvm.class-loading") with JmxMe
 
     val classLoadingMetric = Kamon.gauge(metricName)
 
-    val classesLoadedMetric           = classLoadingMetric.refine(Map("component" -> "system-metrics", "mode" -> "loaded"))
-    val classesUnloadedMetric         = classLoadingMetric.refine(Map("component" -> "system-metrics", "mode" -> "unloaded"))
-    val classesLoadedCurrentlyMetric  = classLoadingMetric.refine(Map("component" -> "system-metrics", "mode" -> "currently-loaded"))
+    val classesLoadedMetric           = classLoadingMetric.refine(Map(serviceTag, "component" -> "system-metrics", "mode" -> "loaded"))
+    val classesUnloadedMetric         = classLoadingMetric.refine(Map(serviceTag, "component" -> "system-metrics", "mode" -> "unloaded"))
+    val classesLoadedCurrentlyMetric  = classLoadingMetric.refine(Map(serviceTag, "component" -> "system-metrics", "mode" -> "currently-loaded"))
 
     def update(): Unit = {
       classesLoadedMetric.set(classLoadingBean.getTotalLoadedClassCount)
