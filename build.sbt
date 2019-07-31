@@ -22,7 +22,7 @@ val slf4jJul          = "org.slf4j"                 %   "jul-to-slf4j"          
 
 name := "kamon-system-metrics"
 
-scalaVersion := "2.11.12"
+scalaVersion := "2.12.8"
 
 libraryDependencies ++=
   compileScope(kamonCore, sigarLoader) ++
